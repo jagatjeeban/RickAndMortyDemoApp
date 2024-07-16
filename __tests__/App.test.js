@@ -13,5 +13,6 @@ import {it} from '@jest/globals';
 import renderer from 'react-test-renderer';
 
 it('renders correctly', () => {
-  renderer.create(<App />);
+  let snapshot = renderer.create(<App />).toJSON();
+  expect(snapshot).toMatchSnapshot();
 });
