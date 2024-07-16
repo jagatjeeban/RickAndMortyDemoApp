@@ -2996,30 +2996,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"RickAndMorty@workspace:.":
-  version: 0.0.0-use.local
-  resolution: "RickAndMorty@workspace:."
-  dependencies:
-    "@babel/core": ^7.20.0
-    "@babel/preset-env": ^7.20.0
-    "@babel/runtime": ^7.20.0
-    "@react-native/babel-preset": 0.74.85
-    "@react-native/eslint-config": 0.74.85
-    "@react-native/metro-config": 0.74.85
-    "@react-native/typescript-config": 0.74.85
-    "@types/react": ^18.2.6
-    "@types/react-test-renderer": ^18.0.0
-    babel-jest: ^29.6.3
-    eslint: ^8.19.0
-    jest: ^29.6.3
-    prettier: 2.8.8
-    react: 18.2.0
-    react-native: 0.74.3
-    react-test-renderer: 18.2.0
-    typescript: 5.0.4
-  languageName: unknown
-  linkType: soft
-
 "abbrev@npm:^2.0.0":
   version: 2.0.0
   resolution: "abbrev@npm:2.0.0"
@@ -8298,6 +8274,30 @@ __metadata:
   checksum: c3076ebcc22a6bc252cb0b9c77561795256c22b757f40c0d8110b1300723f15ec0fc8685e8d4ea6d7666f36c79ccc793b1939c748bf36f18f542744a4e379fcc
   languageName: node
   linkType: hard
+
+"rickandmorty@workspace:.":
+  version: 0.0.0-use.local
+  resolution: "rickandmorty@workspace:."
+  dependencies:
+    "@babel/core": ^7.20.0
+    "@babel/preset-env": ^7.20.0
+    "@babel/runtime": ^7.20.0
+    "@react-native/babel-preset": 0.74.85
+    "@react-native/eslint-config": 0.74.85
+    "@react-native/metro-config": 0.74.85
+    "@react-native/typescript-config": 0.74.85
+    "@types/react": ^18.2.6
+    "@types/react-test-renderer": ^18.0.0
+    babel-jest: ^29.6.3
+    eslint: ^8.19.0
+    jest: ^29.6.3
+    prettier: 2.8.8
+    react: 18.2.0
+    react-native: 0.74.3
+    react-test-renderer: 18.2.0
+    typescript: 5.0.4
+  languageName: unknown
+  linkType: soft
 
 "rimraf@npm:^3.0.2":
   version: 3.0.2
