@@ -1,11 +1,12 @@
 import React from "react";
-import { SafeAreaView, StyleSheet, Text } from "react-native";
+import { StyleSheet } from "react-native";
+
+//import main stack navigator
+import MainStackNavigator from "./src/navigators";
 
 const App = () => {
   return(
-    <SafeAreaView style={styles.safeAreaView}>
-      <Text>Hello Rick and Morty</Text>
-    </SafeAreaView>
+    <MainStackNavigator />
   )
 }
 
