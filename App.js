@@ -1,10 +1,10 @@
 import React from "react";
-import { SafeAreaView, StyleSheet, Text } from "react-native";
+import { SafeAreaView, StyleSheet, Text, Platform } from "react-native";
 
 const App = () => {
   return(
     <SafeAreaView style={styles.safeAreaView}>
-      <Text>Hello Rick and Morty</Text>
+      <Text style={{color:'black'}}>{`Hello Rick and Morty on ${Platform.OS === 'macos'? 'Desktop': 'Mobile'}`}</Text>
     </SafeAreaView>
   )
 }
@@ -15,6 +15,7 @@ const styles = StyleSheet.create({
   safeAreaView: {
     flex: 1,
     alignItems:'center',
-    justifyContent:'center'
+    justifyContent:'center',
+    backgroundColor: 'white'
   }
 })
