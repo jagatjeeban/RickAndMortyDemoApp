@@ -1,12 +1,18 @@
 import React from "react";
-import { StyleSheet } from "react-native";
+import { StyleSheet, StatusBar } from "react-native";
 
 //import main stack navigator
 import MainStackNavigator from "./src/navigators";
 
+//import constants
+import { Colors } from "./src/common/constants";
+
 const App = () => {
   return(
-    <MainStackNavigator />
+    <>
+      <StatusBar backgroundColor={Colors.BgColor} />
+      <MainStackNavigator />
+    </>
   )
 }
 
