@@ -91,15 +91,21 @@ const CharacterProfile = ({ navigation, route }) => {
     setLoaderStatus(true);
     let param = `/character/${route?.params?.characterId}`;
     let response = await getCharactersGetAPI(param);
-    setLoaderStatus(false);
     if(response?.statusCode === 200){
       setCharacterInfo(response?.data);
       getNoOfResidents(getIdFromUrl(response?.data?.location?.url));
       let episodeIds = response?.data?.episode?.map(episode => getIdFromUrl(episode));
-      episodeIds.map(async id => {
-        let episode = await getCharactersGetAPI(`/episode/${id}`);
-        episodeList.push({ name: episode?.data?.name, episode: episode?.data?.episode });
-      });
+      try {
+        let episodes = await Promise.all(episodeIds.map(async id => {
+          let episode = await getCharactersGetAPI(`/episode/${id}`);
+          return { name: episode?.data?.name, episode: episode?.data?.episode };
+        }));
+        setEpisodeList(episodes);
+      } catch (error) {
+        console.log('ERROR fetching episodes: ', JSON.stringify(error));
+        showMessage({message: Strings.ErrMsg, description: `Couldn't fetch featured episodes.`, type:'danger', icon:'info'});
+      }
+      setLoaderStatus(false);
     } else {
       showMessage({message: Strings.ErrMsg, description: `Couldn't fetch the character details.`, type:'danger', icon:'info'});
     }
@@ -141,12 +147,14 @@ const CharacterProfile = ({ navigation, route }) => {
                 <CharacterDataItem title={'Current Location'}  value={validateString(characterInfo?.location?.name)} />
                 <CharacterDataItem title={'No. of Residents'}  value={validateString(noOfResidents)} />
                 <CharacterDataItem title={'Featured Episodes'} value={''} />
-                <FlatList
-                  data={episodeList}
-                  showsVerticalScrollIndicator={false}
-                  renderItem={EpisodeItem}
-                  keyExtractor={(_, index) => index.toString()}
-                />
+                {episodeList?.length > 0? 
+                  <FlatList
+                    data={episodeList}
+                    showsVerticalScrollIndicator={false}
+                    renderItem={EpisodeItem}
+                    keyExtractor={(_, index) => index.toString()}
+                  />
+                : null}
               </View>
             </>
           }
