@@ -1,5 +1,6 @@
 const Strings = {
-    Characters: 'Characters'
+    Characters: 'Characters',
+    ErrMsg: 'Something went wrong!'
 }
 
 export default Strings;

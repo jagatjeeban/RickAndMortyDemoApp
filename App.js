@@ -1,5 +1,6 @@
 import React from "react";
 import { StyleSheet, StatusBar } from "react-native";
+import FlashMessage from "react-native-flash-message";
 
 //import main stack navigator
 import MainStackNavigator from "./src/navigators";
@@ -12,6 +13,7 @@ const App = () => {
     <>
       <StatusBar backgroundColor={Colors.BgColor} />
       <MainStackNavigator />
+      <FlashMessage position={'bottom'} floating />
     </>
   )
 }

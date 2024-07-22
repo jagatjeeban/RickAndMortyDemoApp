@@ -5,6 +5,7 @@ const Colors = {
     Base_Red: '#F13939',
     Base_Grey: '#424242',
     Base_Medium_Grey: '#838383',
+    Base_Gradient: 'rgba(0, 0, 0, 1)'
 }
 
 export default Colors;
