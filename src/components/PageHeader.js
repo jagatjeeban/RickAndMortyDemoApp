@@ -9,8 +9,9 @@ import SvgBackArrow       from '../assets/icons/svg/backArrow.svg';
 import SvgBackGrey        from '../assets/icons/svg/backArrowGrey.svg';
 import SvgSearch          from '../assets/icons/svg/searchWhite.svg';
 import SvgCross           from '../assets/icons/svg/crossGrey.svg';
+import SvgFilter          from '../assets/icons/svg/filter.svg';
 
-const NormalHeader = ({navigation, placeholder, backBtn, headerTitle, headerTitleColor, iconArr, searchStatus, updateSearchStatus, searchBlur, textChangeEvent}) => {
+const NormalHeader = ({navigation, placeholder, backBtn, headerTitle, headerTitleColor, iconArr, searchStatus, updateSearchStatus, searchBlur, textChangeEvent, clickEvent}) => {
     
     //states
     const [ searchInput, setSearchInput ] = useState('');
@@ -64,6 +65,11 @@ const NormalHeader = ({navigation, placeholder, backBtn, headerTitle, headerTitl
                                     <SvgSearch width={20} height={20} />
                                 </TouchableOpacity>
                             : null }
+                            { iconArr.some((item) => item === 'filter')? 
+                                <TouchableOpacity style={styles.iconStyle} onPress={() => clickEvent()}>
+                                    <SvgFilter width={20} height={20} />
+                                </TouchableOpacity>
+                            : null}
                         </View>
                     : null}
                 </View>
@@ -95,11 +101,11 @@ const NormalHeader = ({navigation, placeholder, backBtn, headerTitle, headerTitl
     )
 }
 
-const PageHeader = ({navigation, placeholder='Search', headerTitle=null, headerTitleColor=Colors.Base_White, iconArr=[], backBtn=false, searchBlur=null, searchEvent=null}) => {
+const PageHeader = ({navigation, placeholder='Search', headerTitle=null, headerTitleColor=Colors.Base_White, iconArr=[], backBtn=false, searchBlur=null, searchEvent=null, clickEvent=null}) => {
     const [ searchStatus, setSearchStatus ] = useState(false);
     return(
         <>
-            <NormalHeader navigation={navigation} headerTitle={headerTitle} headerTitleColor={headerTitleColor} placeholder={placeholder} backBtn={backBtn} iconArr={iconArr} searchStatus={searchStatus} textChangeEvent={(val) => searchEvent? searchEvent(val): null} searchBlur={() => {if(searchBlur) searchBlur()}} updateSearchStatus={() => setSearchStatus(!searchStatus)} />
+            <NormalHeader navigation={navigation} headerTitle={headerTitle} headerTitleColor={headerTitleColor} placeholder={placeholder} backBtn={backBtn} iconArr={iconArr} searchStatus={searchStatus} textChangeEvent={(val) => searchEvent? searchEvent(val): null} clickEvent={() => clickEvent()} searchBlur={() => {if(searchBlur) searchBlur()}} updateSearchStatus={() => setSearchStatus(!searchStatus)} />
         </>
     )
 }

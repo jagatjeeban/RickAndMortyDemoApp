@@ -23,6 +23,8 @@ const Characters = ({ navigation }) => {
   const [ loaderStatus, setLoaderStatus ]                 = useState(false);
   const [ pageNumber, setPageNumber ]                     = useState(1);
   const [ totalCount, setTotalCount ]                     = useState(0);
+  const [ allcount, setAllCount ]                         = useState(0);
+  const [ searchInput, setSearchInput ]                   = useState('');
 
   //character card item component
   const CharacterCardItem = ({item, index}) => {
@@ -68,9 +70,11 @@ const Characters = ({ navigation }) => {
     let response = await getCharactersGetAPI(param);
     setLoaderStatus(false);
     if(response?.statusCode === 200){
+      setCharactersList(response?.data?.results);
       setFilteredCharacters(response?.data?.results);
       setPageNumber(2);
       setTotalCount(response?.data?.info?.count);
+      setAllCount(response?.data?.info?.count);
     } else {
       showMessage({message: Strings.ErrMsg, description: `Couldn't fetch the charcters.`, type:'danger', icon:'info'});
     }
@@ -78,13 +82,35 @@ const Characters = ({ navigation }) => {
 
   //function to load more characters 
   const getPaginatedCharacters = async() => {
-    let param = `/character/?page=${pageNumber}`;
+    let param = `/character/?page=${pageNumber}&name=${searchInput}`;
     let response = await getCharactersGetAPI(param);
     if(response?.statusCode === 200){
-      setCharactersList([...charactersList, ...response?.data?.results]);
+      setFilteredCharacters([...filteredCharacters, ...response?.data?.results]);
       setPageNumber(pageNumber+1);
     } else {
-      showMessage({message: Strings.ErrMsg, description: `Couldn't load more charcters.`, type:'danger', icon:'info'});
+      showMessage({message: Strings.ErrMsg, description: `Couldn't load more characters.`, type:'danger', icon:'info'});
+    }
+  }
+
+  //function to search the characters
+  const searchEvent = async(req) => {
+    if(req === ''){
+      setSearchInput('');
+      setTotalCount(allcount);
+      setFilteredCharacters(charactersList);
+    } else {
+      setLoaderStatus(true);
+      setSearchInput(req);
+      let param = `/character/?name=${req}`;
+      let response = await getCharactersGetAPI(param);
+      setLoaderStatus(false);
+      if(response?.statusCode === 200){
+        setFilteredCharacters(response?.data?.results);
+        setTotalCount(response?.data?.info?.count);
+        setPageNumber(2);
+      } else {
+        setFilteredCharacters([]);
+      }
     }
   }
 
@@ -94,7 +120,7 @@ const Characters = ({ navigation }) => {
 
   return (
     <SafeAreaView style={styles.safeAreaView}>
-      <PageHeader headerTitle={'Ricky & Morty Characters'} iconArr={['search']} searchEvent={(req) => null} navigation={navigation} />
+      <PageHeader headerTitle={'Ricky & Morty Characters'} iconArr={['search', 'filter']} searchEvent={(req) => searchEvent(req)} clickEvent={() => alert('clicked')} navigation={navigation} />
       <View style={{flex: 1}}>
         {loaderStatus? 
           <View style={{flex: 1, alignItems:'center', justifyContent:"center"}}>
@@ -107,9 +133,9 @@ const Characters = ({ navigation }) => {
             columnWrapperStyle={{justifyContent:'space-between'}}
             showsVerticalScrollIndicator={true}
             refreshing={loaderStatus}
-            onRefresh={() => getCharacters()}
+            onRefresh={() =>  searchInput === ''? getCharacters(): null}
             onEndReachedThreshold={0.3}
-            onEndReached={() => filteredCharacters?.length > 0 && filteredCharacters?.length < totalCount? getPaginatedCharacters(): null}
+            onEndReached={() => filteredCharacters?.length > 0 && filteredCharacters?.length < totalCount? getPaginatedCharacters(searchInput): null}
             contentContainerStyle={{justifyContent:"space-between", marginHorizontal: 20}}
             renderItem={CharacterCardItem}
             ListHeaderComponent={<View style={styles.height20} />}

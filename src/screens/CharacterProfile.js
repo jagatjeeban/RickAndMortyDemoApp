@@ -98,7 +98,7 @@ const CharacterProfile = ({ navigation, route }) => {
       let episodeIds = response?.data?.episode?.map(episode => getIdFromUrl(episode));
       episodeIds.map(async id => {
         let episode = await getCharactersGetAPI(`/episode/${id}`);
-        episodeList.push({ name: episode?.data?.name, episode: episode?.data?.episode});
+        episodeList.push({ name: episode?.data?.name, episode: episode?.data?.episode });
       });
     } else {
       showMessage({message: Strings.ErrMsg, description: `Couldn't fetch the character details.`, type:'danger', icon:'info'});
