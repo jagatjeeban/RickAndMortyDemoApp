@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import { View, Text, TextInput, StyleSheet, TouchableOpacity, BackHandler } from "react-native";
+import { useIsFocused } from "@react-navigation/native";
 
 //import constants
 import { Colors, FontFamily } from "../common/constants";
@@ -11,18 +12,21 @@ import SvgSearch          from '../assets/icons/svg/searchWhite.svg';
 import SvgCross           from '../assets/icons/svg/crossGrey.svg';
 import SvgFilter          from '../assets/icons/svg/filter.svg';
 
-const NormalHeader = ({navigation, placeholder, backBtn, headerTitle, headerTitleColor, iconArr, searchStatus, updateSearchStatus, searchBlur, textChangeEvent, clickEvent}) => {
+const PageHeader = ({navigation, placeholder='Search', headerTitle=null, headerTitleColor=Colors.Base_White, iconArr=[], backBtn=false, searchBlur=null, searchEvent=null, clickEvent=null}) => {
     
     //states
-    const [ searchInput, setSearchInput ] = useState('');
-
+    const [ searchStatus, setSearchStatus ] = useState(false);
+    const [ searchInput, setSearchInput ]   = useState('');
+    
     //refs
     const searchRef                       = useRef();
 
+    const isFocused = useIsFocused();
+    
     //function to handle system back press event
     const handleBackPress = () => {
         if(searchStatus){
-            updateSearchStatus();
+            setSearchStatus(false);
             textChangeEvent('');
             setSearchInput('');
             return true;
@@ -30,17 +34,19 @@ const NormalHeader = ({navigation, placeholder, backBtn, headerTitle, headerTitl
         return false;
     }
 
+    useEffect(()=>{
+        if(isFocused){
+            const backHandler = BackHandler.addEventListener('hardwareBackPress', handleBackPress);
+            return () => backHandler.remove();
+        }
+    }, [searchStatus, isFocused]);
+
     useEffect(() => {
         if(searchStatus){
             searchRef?.current?.focus();
         }
-    }, [searchStatus]);
-
-    useEffect(()=>{
-        const backHandler = BackHandler.addEventListener('hardwareBackPress', handleBackPress);
-        return () => backHandler.remove();
-    }, [searchStatus]);
-
+    }, [searchStatus]);    
+    
     return(
         <View style={styles.body}>
             {!searchStatus? 
@@ -61,22 +67,22 @@ const NormalHeader = ({navigation, placeholder, backBtn, headerTitle, headerTitl
                     {iconArr?.length > 0? 
                         <View style={{flexDirection:'row', alignItems:'center'}}>
                             { iconArr.some((item) => item === 'search')?
-                                <TouchableOpacity style={styles.iconStyle} onPress={() => updateSearchStatus()}>
+                                <TouchableOpacity style={styles.iconStyle} onPress={() => setSearchStatus(!searchStatus)}>
                                     <SvgSearch width={20} height={20} />
                                 </TouchableOpacity>
                             : null }
-                            { iconArr.some((item) => item === 'filter')? 
+                            {/* { iconArr.some((item) => item === 'filter')? 
                                 <TouchableOpacity style={styles.iconStyle} onPress={() => clickEvent()}>
                                     <SvgFilter width={20} height={20} />
                                 </TouchableOpacity>
-                            : null}
+                            : null} */}
                         </View>
                     : null}
                 </View>
             :
             <View style={styles.searchInputContainer}>
                 <View style={{flexDirection:'row', alignItems:"center", width:"87%"}}>
-                    <TouchableOpacity onPress={() => [updateSearchStatus(), textChangeEvent(''), setSearchInput('')]} style={{padding: 20}}>
+                    <TouchableOpacity onPress={() => [setSearchStatus(!searchStatus), searchEvent(''), setSearchInput('')]} style={{padding: 20}}>
                         <SvgBackGrey />
                     </TouchableOpacity>
                     <TextInput
@@ -88,25 +94,16 @@ const NormalHeader = ({navigation, placeholder, backBtn, headerTitle, headerTitl
                         autoFocus={true}
                         style={{color: Colors.Base_White, fontSize: 18, fontFamily: FontFamily.OutfitRegular, paddingVertical:20, width:'85%'}}
                         onBlur={() => { if(searchBlur) searchBlur() }}
-                        onChange={(e) => [textChangeEvent(e.nativeEvent.text), setSearchInput(e.nativeEvent.text)]}
+                        onChange={(e) => [searchEvent(e.nativeEvent.text), setSearchInput(e.nativeEvent.text)]}
                     />
                 </View>
                 {searchInput !== ''? 
-                    <TouchableOpacity onPress={() => [textChangeEvent(''), setSearchInput('')]} style={{padding:20}}>
+                    <TouchableOpacity onPress={() => [searchEvent(''), setSearchInput('')]} style={{padding:20}}>
                         <SvgCross />
                     </TouchableOpacity>
                 : null}
             </View>}
         </View>
-    )
-}
-
-const PageHeader = ({navigation, placeholder='Search', headerTitle=null, headerTitleColor=Colors.Base_White, iconArr=[], backBtn=false, searchBlur=null, searchEvent=null, clickEvent=null}) => {
-    const [ searchStatus, setSearchStatus ] = useState(false);
-    return(
-        <>
-            <NormalHeader navigation={navigation} headerTitle={headerTitle} headerTitleColor={headerTitleColor} placeholder={placeholder} backBtn={backBtn} iconArr={iconArr} searchStatus={searchStatus} textChangeEvent={(val) => searchEvent? searchEvent(val): null} clickEvent={() => clickEvent()} searchBlur={() => {if(searchBlur) searchBlur()}} updateSearchStatus={() => setSearchStatus(!searchStatus)} />
-        </>
     )
 }
 

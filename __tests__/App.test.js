@@ -1,18 +1,27 @@
-/**
- * @format
- */
-
 import 'react-native';
 import React from 'react';
 import App from '../App';
 
+//import render 
+import { render } from '@testing-library/react-native';
+
 // Note: import explicitly to use the types shipped with jest.
 import {it} from '@jest/globals';
 
-// Note: test renderer must be required after react-native.
-import renderer from 'react-test-renderer';
+// Mocking react-native-flash-message
+jest.mock('react-native-flash-message', () => 'FlashMessage');
 
-it('renders correctly', () => {
-  let snapshot = renderer.create(<App />).toJSON();
+// Mocking react-navigation stack navigator
+jest.mock('../src/navigators', () => {
+  return {
+    __esModule: true,
+    default: () => {
+      return <></>;
+    },
+  };
+});
+
+it('app renders correctly', () => {
+  const snapshot = render(<App/>).toJSON();
   expect(snapshot).toMatchSnapshot();
 });
