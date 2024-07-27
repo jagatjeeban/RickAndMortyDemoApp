@@ -27,7 +27,7 @@ const PageHeader = ({navigation, placeholder='Search', headerTitle=null, headerT
     const handleBackPress = () => {
         if(searchStatus){
             setSearchStatus(false);
-            textChangeEvent('');
+            searchEvent('');
             setSearchInput('');
             return true;
         }
