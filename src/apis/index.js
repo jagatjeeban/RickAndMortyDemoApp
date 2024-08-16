@@ -6,5 +6,5 @@ import config from "../common/config";
 
 //function to get characters from api
 export const getCharactersGetAPI = (params) => {
-    return instance('GET', config.BASE_URL+params);
+    return instance('GET', config.BASE_URL + params);
 };

@@ -29,7 +29,7 @@ const Characters = ({ navigation }) => {
   //character card item component
   const CharacterCardItem = ({item, index}) => {
 
-    //function to get the status color
+    //function to get the character status (e.g. Alive, Dead) color
     const getStatusColor = () => {
       if(item?.status === 'Alive'){
         return Colors.Base_Green;
@@ -43,7 +43,7 @@ const Characters = ({ navigation }) => {
     }
 
     return(
-      <TouchableOpacity activeOpacity={0.7} key={index} onPress={() => navigation.navigate('CharacterProfile', { pageTitle: item?.name, characterId: item?.id })} style={styles.cardItemContainer}>
+      <TouchableOpacity activeOpacity={1} key={index} onPress={() => navigation.navigate('CharacterProfile', { pageTitle: item?.name, characterId: item?.id })} style={styles.cardItemContainer}>
         <Image source={{uri: item?.image}} style={styles.cardImageStyle} resizeMode={'cover'} />
         <LinearGradient
           colors={['transparent', Colors.Base_Gradient]}
@@ -120,10 +120,10 @@ const Characters = ({ navigation }) => {
 
   return (
     <SafeAreaView style={styles.safeAreaView}>
-      <PageHeader headerTitle={'Ricky & Morty Characters'} iconArr={['search', 'filter']} searchEvent={(req) => searchEvent(req)} clickEvent={() => alert('clicked')} navigation={navigation} />
+      <PageHeader headerTitle={Strings.HeaderTitle} iconArr={['search', 'filter']} searchEvent={(req) => searchEvent(req)} clickEvent={() => alert('clicked')} navigation={navigation} />
       <View style={{flex: 1}}>
         {loaderStatus? 
-          <View style={{flex: 1, alignItems:'center', justifyContent:"center"}}>
+          <View style={styles.loaderStyle}>
             <ActivityIndicator size={'large'} color={Colors.Base_Medium_Grey} />
           </View>
         :
@@ -133,10 +133,10 @@ const Characters = ({ navigation }) => {
             columnWrapperStyle={{justifyContent:'space-between'}}
             showsVerticalScrollIndicator={true}
             refreshing={loaderStatus}
-            onRefresh={() =>  searchInput === ''? getCharacters(): null}
+            onRefresh={searchInput === ''? () => getCharacters(): false}
             onEndReachedThreshold={0.3}
             onEndReached={() => filteredCharacters?.length > 0 && filteredCharacters?.length < totalCount? getPaginatedCharacters(searchInput): null}
-            contentContainerStyle={{justifyContent:"space-between", marginHorizontal: 20}}
+            contentContainerStyle={styles.flatlistStyle}
             renderItem={CharacterCardItem}
             ListHeaderComponent={<View style={styles.height20} />}
             ListFooterComponent={
@@ -149,6 +149,7 @@ const Characters = ({ navigation }) => {
             }
             ItemSeparatorComponent={<View style={styles.height20} />}
             ListEmptyComponent={<NoDataFound title={'No Character found!'} />}
+            keyExtractor={(_, index) => index.toString()}
           />
         }
       </View>
@@ -165,6 +166,15 @@ const styles = StyleSheet.create({
   },
   height20: {
     height: 20
+  },
+  flatlistStyle: {
+    justifyContent:"space-between", 
+    marginHorizontal: 20
+  },
+  loaderStyle: {
+    flex: 1, 
+    alignItems:'center', 
+    justifyContent:"center"
   },
   cardItemContainer: {
     width: '47%', 

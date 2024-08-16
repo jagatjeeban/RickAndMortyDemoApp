@@ -6,14 +6,14 @@ import FlashMessage from "react-native-flash-message";
 import MainStackNavigator from "./src/navigators";
 
 //import constants
-import { Colors } from "./src/common/constants";
+import { Colors, FontFamily } from "./src/common/constants";
 
 const App = () => {
   return(
     <>
       <StatusBar backgroundColor={Colors.BgColor} />
       <MainStackNavigator />
-      <FlashMessage position={'bottom'} floating />
+      <FlashMessage position={'bottom'} floating titleStyle={{fontFamily: FontFamily.OutfitMedium}} textStyle={{fontFamily: FontFamily.OutfitRegular}} />
     </>
   )
 }

@@ -42,7 +42,9 @@ const CharacterProfile = ({ navigation, route }) => {
 
     return(
       <View style={styles.cardItemContainer}>
-        <Image source={{uri: characterInfo?.image}} style={styles.cardImageStyle} resizeMode={'cover'} />
+        {characterInfo?.image? 
+          <Image source={{uri: characterInfo?.image}} style={styles.cardImageStyle} resizeMode={'cover'} />
+        : null}
         <LinearGradient
           colors={['transparent', Colors.Base_Gradient]}
           style={styles.cardGradient}
