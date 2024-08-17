@@ -1,4 +1,4 @@
-import { View, Text, SafeAreaView, StyleSheet, FlatList, ActivityIndicator, Image, TouchableOpacity } from 'react-native'
+import { View, Text, SafeAreaView, StyleSheet, FlatList, ActivityIndicator, Image, TouchableOpacity, RefreshControl } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import { showMessage } from 'react-native-flash-message';
 import LinearGradient from 'react-native-linear-gradient';
@@ -66,8 +66,8 @@ const Characters = ({ navigation }) => {
   //function to get all the characters
   const getCharacters = async() => {
     setLoaderStatus(true);
-    let param = `/character/?page=1`;
-    let response = await getCharactersGetAPI(param);
+    const param = `/character/?page=1`;
+    const response = await getCharactersGetAPI(param);
     setLoaderStatus(false);
     if(response?.statusCode === 200){
       setCharactersList(response?.data?.results);
@@ -76,19 +76,19 @@ const Characters = ({ navigation }) => {
       setTotalCount(response?.data?.info?.count);
       setAllCount(response?.data?.info?.count);
     } else {
-      showMessage({message: Strings.ErrMsg, description: `Couldn't fetch the charcters.`, type:'danger', icon:'info'});
+      showMessage({message: Strings.ErrMsg, description: Strings.ErrDescription, type:'danger', icon:'info'});
     }
   }
 
   //function to load more characters 
   const getPaginatedCharacters = async() => {
-    let param = `/character/?page=${pageNumber}&name=${searchInput}`;
-    let response = await getCharactersGetAPI(param);
+    const param = `/character/?page=${pageNumber}&name=${searchInput}`;
+    const response = await getCharactersGetAPI(param);
     if(response?.statusCode === 200){
       setFilteredCharacters([...filteredCharacters, ...response?.data?.results]);
       setPageNumber(pageNumber+1);
     } else {
-      showMessage({message: Strings.ErrMsg, description: `Couldn't load more characters.`, type:'danger', icon:'info'});
+      showMessage({message: Strings.ErrMsg, description: Strings.ErrDescription, type:'danger', icon:'info'});
     }
   }
 
@@ -101,8 +101,8 @@ const Characters = ({ navigation }) => {
     } else {
       setLoaderStatus(true);
       setSearchInput(req);
-      let param = `/character/?name=${req}`;
-      let response = await getCharactersGetAPI(param);
+      const param = `/character/?name=${req}`;
+      const response = await getCharactersGetAPI(param);
       setLoaderStatus(false);
       if(response?.statusCode === 200){
         setFilteredCharacters(response?.data?.results);
@@ -131,9 +131,14 @@ const Characters = ({ navigation }) => {
             data={filteredCharacters}
             numColumns={2}
             columnWrapperStyle={{justifyContent:'space-between'}}
-            showsVerticalScrollIndicator={true}
-            refreshing={loaderStatus}
-            onRefresh={searchInput === ''? () => getCharacters(): false}
+            refreshControl={
+              <RefreshControl
+                refreshing={loaderStatus}
+                onRefresh={searchInput === ''? () => getCharacters(): false}
+                progressBackgroundColor={Colors.Base_Grey}
+                colors={[Colors.Base_White]}
+              />
+            }
             onEndReachedThreshold={0.3}
             onEndReached={() => filteredCharacters?.length > 0 && filteredCharacters?.length < totalCount? getPaginatedCharacters(searchInput): null}
             contentContainerStyle={styles.flatlistStyle}

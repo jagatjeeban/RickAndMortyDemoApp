@@ -105,11 +105,11 @@ const CharacterProfile = ({ navigation, route }) => {
         setEpisodeList(episodes);
       } catch (error) {
         console.log('ERROR fetching episodes: ', JSON.stringify(error));
-        showMessage({message: Strings.ErrMsg, description: `Couldn't fetch featured episodes.`, type:'danger', icon:'info'});
+        showMessage({message: Strings.ErrMsg, description: Strings.ErrDescription, type:'danger', icon:'info'});
       }
       setLoaderStatus(false);
     } else {
-      showMessage({message: Strings.ErrMsg, description: `Couldn't fetch the character details.`, type:'danger', icon:'info'});
+      showMessage({message: Strings.ErrMsg, description: Strings.ErrDescription, type:'danger', icon:'info'});
     }
   }
 

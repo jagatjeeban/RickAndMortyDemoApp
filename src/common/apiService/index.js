@@ -3,10 +3,11 @@ import axios from "axios";
 //function to create a new instance of axios with a custom config
 export const instance = async(method = 'GET', baseUrl) => {
     try {
-        var header = {
+        const header = {
             'Accept': 'application/json',
             'Content-Type': 'application/json;charset=UTF-8'
         }
+        
         let response = {};
         if(method === 'GET'){
             response = await axios.get(baseUrl, header).then((response) => {

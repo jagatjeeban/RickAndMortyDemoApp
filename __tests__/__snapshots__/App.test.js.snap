@@ -4,5 +4,15 @@ exports[`app renders correctly 1`] = `
 <FlashMessage
   floating={true}
   position="bottom"
+  textStyle={
+    {
+      "fontFamily": "Outfit-Regular",
+    }
+  }
+  titleStyle={
+    {
+      "fontFamily": "Outfit-Medium",
+    }
+  }
 />
 `;
